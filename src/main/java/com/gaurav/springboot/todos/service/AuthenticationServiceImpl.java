@@ -3,12 +3,17 @@ package com.gaurav.springboot.todos.service;
 import com.gaurav.springboot.todos.entity.Authority;
 import com.gaurav.springboot.todos.entity.User;
 import com.gaurav.springboot.todos.repository.UserRepository;
+import com.gaurav.springboot.todos.request.AuthenticationRequest;
 import com.gaurav.springboot.todos.request.RegisterRequest;
+import com.gaurav.springboot.todos.response.AuthenticationResponse;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -17,10 +22,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
+    private final JwtService jwtService;
 
-    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthenticationServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, JwtService jwtService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtService = jwtService;
     }
 
     @Override
@@ -33,6 +42,23 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = buildNewUser(input);
         assignAuthorities(user);
         userRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = true) //only fetching data
+    public AuthenticationResponse login(AuthenticationRequest request) {
+
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
+        );
+        // If above code found the user in db with same password, then following code will execute
+        // otherwise throw error.
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid email and password"));
+
+        String jwtToken = jwtService.generateToken(new HashMap<>(), user);
+
+        return new AuthenticationResponse(jwtToken);
     }
 
     private boolean isEmailTaken(String email) {
