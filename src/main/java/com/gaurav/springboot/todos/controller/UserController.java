@@ -3,6 +3,7 @@ package com.gaurav.springboot.todos.controller;
 import com.gaurav.springboot.todos.response.UserResponse;
 import com.gaurav.springboot.todos.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,5 +23,10 @@ public class UserController {
     public UserResponse getUserInfo() {
         UserResponse userInfo = userService.getUserInfo();
         return userInfo;
+    }
+
+    @DeleteMapping()
+    public void deleteUser() {
+        userService.deleteUser();
     }
 }
