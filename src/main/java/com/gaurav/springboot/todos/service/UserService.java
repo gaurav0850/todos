@@ -1,8 +1,8 @@
 package com.gaurav.springboot.todos.service;
 
-import com.gaurav.springboot.todos.entity.User;
+import com.gaurav.springboot.todos.response.UserResponse;
 
 public interface UserService {
 
-    User getUserInfo();
+    UserResponse getUserInfo();
 }

@@ -1,7 +1,9 @@
 package com.gaurav.springboot.todos.service;
 
+import com.gaurav.springboot.todos.entity.Authority;
 import com.gaurav.springboot.todos.entity.User;
 import com.gaurav.springboot.todos.repository.UserRepository;
+import com.gaurav.springboot.todos.response.UserResponse;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(readOnly = true)
-    public User getUserInfo() {
+    public UserResponse getUserInfo() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -28,6 +30,13 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Authentication Required");
         }
 
-            return (User) authentication.getPrincipal();
+        User user = (User) authentication.getPrincipal();
+
+        return new UserResponse(
+                user.getId(),
+                user.getFirstName().concat(" ").concat(user.getLastName()),
+                user.getEmail(),
+                user.getAuthorities().stream().map(auth -> (Authority) auth).toList()
+        );
     }
 }
