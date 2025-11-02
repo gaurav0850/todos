@@ -6,11 +6,14 @@ import com.gaurav.springboot.todos.repository.TodoRepository;
 import com.gaurav.springboot.todos.request.TodoRequest;
 import com.gaurav.springboot.todos.request.TodoResponse;
 import com.gaurav.springboot.todos.util.FindAuthenticatedUser;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TodoServiceImpl implements TodoService {
@@ -40,6 +43,20 @@ public class TodoServiceImpl implements TodoService {
             todoResponses.add(convertTodoToTodoResponse(todoRepository.save(todo)));
         }
         return todoResponses;
+    }
+
+    @Transactional
+    @Override
+    public TodoResponse toggleTodoCompletion(long id) {
+        User currentUser = findAuthenticatedUser.getAuthenticatedUser();
+        Optional<Todo> todoOptional = todoRepository.findByIdAndOwner(id, currentUser);
+        if (todoOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Todo not found");
+        }
+        Todo todo = todoOptional.get();
+        todo.setComplete(!todo.isComplete());
+
+        return convertTodoToTodoResponse(todoRepository.save(todo));
     }
 
     private Todo convertTodoRequestToTodo(TodoRequest todoRequest, User currentUser) {
