@@ -43,4 +43,11 @@ public class TodoController {
     public TodoResponse toggleTodoCompletion(@PathVariable("id") @Min(1) long id) {
         return todoService.toggleTodoCompletion(id);
     }
+
+    @Operation(summary = "Delete todo", description = "Delete todo for signed in user")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/todo/{id}")
+    public void deleteTodo(@PathVariable("id") @Min(1) long id) {
+        todoService.deleteTodo(id);
+    }
 }

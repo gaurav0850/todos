@@ -11,4 +11,6 @@ public interface TodoService {
     List<TodoResponse> createTodo(List<TodoRequest> request);
 
     TodoResponse toggleTodoCompletion(long id);
+
+    void deleteTodo(long id);
 }
