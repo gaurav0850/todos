@@ -1,0 +1,20 @@
+First time register
+{
+  "firstName": "Gaurav",
+  "lastName": "Wadibhasme",
+  "email": "Gaurav@a.com",
+  "password": "test1234!"
+}
+login json
+{
+  "email": "Gaurav@a.com",
+  "password": "test1234!"
+}
+
+register json
+{
+  "firstName": "Test",
+  "lastName": "Test",
+  "email": "Test@a.com",
+  "password": "test1234!"
+}
