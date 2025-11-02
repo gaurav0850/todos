@@ -24,9 +24,9 @@ public class TodoController {
 
     @Operation(summary = "Get todos", description = "Get all todos for current user")
     @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/todo")
+    @GetMapping
     public List<TodoResponse> getTodos() {
-        return todoService.getTodos();
+        return todoService.getAllTodos();
     }
 
     @Operation(summary = "Create todo", description = "Crate a new todo for current user")

@@ -10,6 +10,5 @@ import java.util.List;
 
 public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    @Query("SELECT t FROM Todo t WHERE t.owner = :user")
-    List<Todo> findTodosByUser(@Param("user") User user);
+    List<Todo> findByOwner(User owner);
 }

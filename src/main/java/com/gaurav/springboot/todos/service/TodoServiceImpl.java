@@ -25,8 +25,8 @@ public class TodoServiceImpl implements TodoService {
 
     @Transactional(readOnly = true)
     @Override
-    public List<TodoResponse> getTodos() {
-        List<Todo> todos = todoRepository.findTodosByUser(findAuthenticatedUser.getAuthenticatedUser());
+    public List<TodoResponse> getAllTodos() {
+        List<Todo> todos = todoRepository.findByOwner(findAuthenticatedUser.getAuthenticatedUser());
         return todos.stream().map(this::convertTodoToTodoResponse).toList();
     }
 
