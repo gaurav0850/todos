@@ -19,7 +19,7 @@ public class RegisterRequest {
     private String email;
 
     @NotEmpty(message = "Password is mandatory")
-    @Size(min = 5, max = 30, message = "Last name length must be between 5-30")
+    @Size(min = 5, max = 30, message = "Password must be between 5-30")
     private String password;
 
     public RegisterRequest(String email, String firstName, String lastName, String password) {
